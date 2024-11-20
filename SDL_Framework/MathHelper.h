@@ -108,6 +108,33 @@ namespace SDLFramework {
 		return value;
 	}
 
+	inline float PointToLineDistance(const Vector2& lineStart, const Vector2& lineEnd, const Vector2& point) {
+		//a * b / ||b||
+		Vector2 slope = lineEnd - lineStart;
+		float param = Clamp(Dot(point - lineStart, slope) / slope.MagnitudeSqr(), 0.0f, 1.0f);
+		Vector2 nearestPoint = lineStart + slope * param;
+
+		return (point - nearestPoint).Magnitude();
+	}
+
+	inline bool PointInPolygon(Vector2* verts, int vertCount, const Vector2& point) {
+		bool retVal = false;
+		//Creating 2 local variables
+		for (int i = 0, j = vertCount - 1; i < vertCount; j = i++) {
+			if ((verts[i].y >= point.y) != (verts[j].y >= point.y)) {
+				Vector2 vec1 = (verts[i] - verts[j]).Normalized();
+				Vector2 proj = verts[j] + vec1 * Dot(point - verts[j], vec1);
+
+				if (proj.x > point.x) {
+					//Flipping the boolean to its opposite value
+					retVal = !retVal;
+				}
+			}
+		}
+
+		return retVal;
+	}
+
 	const Vector2 Vec2_Zero = { 0.0f, 0.0f };
 	const Vector2 Vec2_One = { 1.0f, 1.0f };
 	//The inverse of Vec2_Up is -Vec2_Up

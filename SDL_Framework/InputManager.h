@@ -1,9 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include "MathHelper.h"
-//#include <string>
-#define _CRT_SECURE_DEPRECATE_MEMORY
-#include <memory.h>
+#include <string>
 
 namespace SDLFramework {
 

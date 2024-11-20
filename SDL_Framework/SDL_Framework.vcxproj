@@ -113,7 +113,7 @@
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(ProjectDir)sdl\dep\devel\x64\*.dll" "$(OutDir)
+      <Command>copy /y "$(ProjectDir)\dep\devel\x64\*.dll" "$(OutDir)
 xcopy "$(ProjectDir)\Assets\*" "$(OutDir)Assets\" /y /s</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -136,7 +136,7 @@ xcopy "$(ProjectDir)\Assets\*" "$(OutDir)Assets\" /y /s</Command>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(ProjectDir)sdl\dep\devel\x64\*.dll" "$(OutDir)
+      <Command>copy /y "$(ProjectDir)\dep\devel\x64\*.dll" "$(OutDir)
 xcopy "$(ProjectDir)\Assets\*" "$(OutDir)Assets\" /y /s</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -144,10 +144,14 @@ xcopy "$(ProjectDir)\Assets\*" "$(OutDir)Assets\" /y /s</Command>
     <ClCompile Include="AnimatedTexture.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="CircleCollider.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="GameEntity.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="PhysEntity.cpp" />
     <ClCompile Include="SDL_Framework.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -156,11 +160,15 @@ xcopy "$(ProjectDir)\Assets\*" "$(OutDir)Assets\" /y /s</Command>
     <ClInclude Include="AnimatedTexture.h" />
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="CircleCollider.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="GameEntity.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="MathHelper.h" />
+    <ClInclude Include="PhysEntity.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
