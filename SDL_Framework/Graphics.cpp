@@ -106,7 +106,7 @@ namespace SDLFramework {
 		}
 
 		mWindow = SDL_CreateWindow(
-			"SDL Tutorial",
+			"SDL Game Test Window",
 			SDL_WINDOWPOS_UNDEFINED,
 			SDL_WINDOWPOS_UNDEFINED,
 			SCREEN_WIDTH,

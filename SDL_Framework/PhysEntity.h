@@ -13,19 +13,21 @@ namespace SDLFramework {
 
 		bool CheckCollision(PhysEntity* other);
 
-		virtual void Hit(PhysEntity* other);
+		virtual void Hit(PhysEntity* other) { std::cout << "A collision has happened!" << std::endl; }
 
 		virtual void Render() override;
 
 	protected:
-		unsigned long mId;
-
+		
 		std::vector<Collider*> mColliders;
 
 		Collider* mBroadPhaseCollider;
 
 		virtual bool IgnoreCollisions();
 
+	//TODO: REMOVE THIS TAG
+	public:
+		unsigned long mId;
 		void AddCollider(Collider* collider, Vector2 locaPos = Vec2_Zero);
 	};
 }

@@ -1,4 +1,6 @@
 #include "GameManager.h"
+//TODO: REMOVE THIS INCLUDE
+#include "BoxCollider.h"
 
 namespace SDLFramework {
     GameManager* GameManager::sInstance = nullptr;
@@ -44,17 +46,17 @@ namespace SDLFramework {
         mInputManager->Update();
 
         if (mInputManager->KeyDown(SDL_SCANCODE_W)) {
-            mTex->Translate(Vector2(0, -40.0f) * mTimer->DeltaTime(), GameEntity::World);
+            mPhysOne->Translate(Vector2(0, -40.0f) * mTimer->DeltaTime(), GameEntity::World);    // movement speed
         }
         else if (mInputManager->KeyDown(SDL_SCANCODE_S)) {
-            mTex->Translate(Vector2(0, 40.0f) * mTimer->DeltaTime(), GameEntity::World);
+            mPhysOne->Translate(Vector2(0, 40.0f) * mTimer->DeltaTime(), GameEntity::World);
         }
         //To prevent diagonal movement, add an else to the if statement below
         if (mInputManager->KeyDown(SDL_SCANCODE_A)) {
-            mTex->Translate(Vector2(-40.0f, 0.0f) * mTimer->DeltaTime(), GameEntity::World);
+            mPhysOne->Translate(Vector2(-40.0f, 0.0f) * mTimer->DeltaTime(), GameEntity::World);
         }
         else if (mInputManager->KeyDown(SDL_SCANCODE_D)) {
-            mTex->Translate(Vector2(40.0f, 0.0f) * mTimer->DeltaTime(), GameEntity::World);
+            mPhysOne->Translate(Vector2(40.0f, 0.0f) * mTimer->DeltaTime(), GameEntity::World);
         }
 
         //TODO:
@@ -83,6 +85,7 @@ namespace SDLFramework {
     }
 
     void GameManager::LateUpdate() {
+        mPhysicsManager->Update();
         mInputManager->UpdatePrevInput();
     }
 
@@ -92,6 +95,8 @@ namespace SDLFramework {
 
         mTex->Render();
         mFontTex->Render();
+        mPhysOne->Render();
+        mPhysTwo->Render();
 
         //Actually showing everthing that we have told to render
         mGraphics->Render();
@@ -110,14 +115,36 @@ namespace SDLFramework {
         mAssetManager = AssetManager::Instance();
         mInputManager = InputManager::Instance();
         mAudioManager = AudioManager::Instance();
+        mPhysicsManager = PhysicsManager::Instance();
+
+        //Create my Physics Layers
+        mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::Friendly,
+            PhysicsManager::CollisionFlags::Hostile |
+            PhysicsManager::CollisionFlags::HostileProjectile);
+
+        mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::Hostile,
+            PhysicsManager::CollisionFlags::Friendly |
+            PhysicsManager::CollisionFlags::FriendlyProjectile);
+
+        //Challenge 2 -> Finish setting up the collision layers (FriendlyProjectiles, HostileProjectiles)
 
         mTex = new AnimatedTexture("SpriteSheet.png", 204, 45, 40, 38, 4, 0.5f, AnimatedTexture::Horizontal);
         mTex->Scale(Vector2(1.5f, 1.5f));
 
         mTex->Position(Vector2(Graphics::SCREEN_WIDTH * 0.49f, Graphics::SCREEN_HEIGHT * 0.5f));
 
-        mFontTex = new Texture("Hello World!", "ARCADE.TTF", 72, { 255, 0, 0 });
-        mFontTex->Position(Vector2(400, 200));
+        mFontTex = new Texture("Hello World!", "ARCADE.TTF", 72, { 255, 0, 0 });                                 // font color
+        mFontTex->Position(Vector2(300, 200));                                                                  // screen width / height//
+
+        mPhysOne = new PhysEntity();
+        mPhysOne->Position(Vector2(Graphics::SCREEN_WIDTH * 0.3f, Graphics::SCREEN_HEIGHT * 0.5f));
+        mPhysOne->AddCollider(new BoxCollider(Vector2(20.0f, 20.0f)));
+        mPhysOne->mId = mPhysicsManager->RegisterEntity(mPhysOne, PhysicsManager::CollisionLayers::Friendly);
+
+        mPhysTwo = new PhysEntity();
+        mPhysTwo->Position(Vector2(Graphics::SCREEN_WIDTH * 0.6f, Graphics::SCREEN_HEIGHT * 0.5f));
+        mPhysTwo->AddCollider(new BoxCollider(Vector2(20.0f, 20.0f)));
+        mPhysTwo->mId = mPhysicsManager->RegisterEntity(mPhysTwo, PhysicsManager::CollisionLayers::Hostile);
     }
 
     GameManager::~GameManager() {
@@ -127,6 +154,12 @@ namespace SDLFramework {
 
         delete mFontTex;
         mFontTex = nullptr;
+
+        delete mPhysOne;
+        mPhysOne = nullptr;
+
+        delete mPhysTwo;
+        mPhysTwo = nullptr;
 
         //Release Modules
         Graphics::Release();
@@ -143,6 +176,9 @@ namespace SDLFramework {
 
         AudioManager::Release();
         mAudioManager = nullptr;
+
+        PhysicsManager::Release();
+        mPhysicsManager = nullptr;
 
         //Quit SDl Subsystems
         SDL_Quit();
